@@ -19,12 +19,12 @@ import lombok.extern.log4j.Log4j2;
 @Getter 	// 게터만 생성
 //@AllArgsConstructor // 필드에 있는 모든 값을 이용해서 생성자를 만듬.
 //@NoArgsConstructor 	// 기본생성자용 new SampleHotel();
-@RequiredArgsConstructor // @NonNull이나 final이 붙은 필드만 생성자값으로 넣음(커스텀)
+//@RequiredArgsConstructor // @NonNull이나 final이 붙은 필드만 생성자값으로 넣음(커스텀)
 public class SampleHotel {
 	
-	@NonNull
+	//@NonNull
 	private Chef chef;
-	private final String HotelName;
+	private /* final */ String HotelName;
 	private Date HotelAge;
 	
 //	public SampleHotel(Chef chef) { // SampleHotel sampleHotel = new SampleHotel(chef);
