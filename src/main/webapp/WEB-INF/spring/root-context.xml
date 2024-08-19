@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<!-- 하단에 있는 네임 스페이스 탭에서 context-scan 체크하면 자동완성이 됨, 적용 됨 -->
-	<context:component-scan base-package="com.Uhyuk.sample"></context:component-scan>
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+	
+		<!-- 하단 log4jdbc용으로 교체
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property> 
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE"></property> -->
+		
+		<!-- log4jdbc용으로 콘솔에 표형식으로 출력 -->
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property> 
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"></property>
+			
+		<property name="username" value="book_ex"></property>
+		<property name="password" value="book_ex"></property>
+	</bean>
+
+	<!-- 커넥션 풀 설정 HikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- mybatis는 pstmt를 사용하지 않고 인터페이스 + xml로 매핑한다. -->
+	
+	<mybatis-spring:scan base-package="net.kwhcloud.mapper"/> <!-- 패키지를 통해서 mybatis가 검색한다. -->
 </beans>

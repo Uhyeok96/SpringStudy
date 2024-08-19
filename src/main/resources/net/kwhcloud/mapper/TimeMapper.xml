@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- xml를 활용한 공통코드 -->
+
+<mapper namespace="net.kwhcloud.mapper.TimeMapper">
+<!-- 관련된 패키지.인터페이스 기술 -->
+
+<!-- sql용 코드를 삽입한다. id:메서드명과 일치 resultType은 리턴타입과 일치 -->
+<select id="getTimeXML" resultType="string">
+	select sysdate from dual
+</select>
+
+
+</mapper>
