@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper 
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- xml를 활용한 공통코드 -->
@@ -9,7 +9,7 @@
 
 <select id="getList" resultType="org.zerock.domain.BoardVO"> <!-- id:메서드명, resultType:객체 -->
 	<![CDATA[
-	select * from tbl_board where bno > 0
+		select * from tbl_board where bno > 0
 	]]> <!-- CDATA 사용 이유는 부등호인지 문자인지를 판단하지 말것 (문자처리) -->
 </select>
 
@@ -21,6 +21,7 @@
 </insert>
 
 <insert id="insertSelectKey">
+	
 	<selectKey keyProperty="bno" order="BEFORE" resultType="long">
 		select seq_board.nextval from dual
 	</selectKey> <!-- insert 전에 번호를 미리 만들어 놈 -->
@@ -28,7 +29,7 @@
 	<![CDATA[
 		insert into tbl_board (bno, title, content, writer)
 		values (#{bno}, #{title}, #{content}, #{writer})
-	]]>
+	]]> 
 </insert>
 
 <select id="read" resultType="org.zerock.domain.BoardVO">
@@ -39,16 +40,16 @@
 
 <update id="update">
 	<![CDATA[
-		update tbl_board set title=#{title}, content=#{content}, writer=#{writer}, updateDate=sysdate
-		where bno=#{bno}
+		update tbl_board set 
+		title = #{ title }, content = #{ content }, writer = #{ writer }, updateDate = sysdate
+		where bno = #{bno}
 	]]> <!-- 번호를 가지고 해당하는 객체를 수정한다. -->
 </update>
 
 <delete id="delete">
 	<![CDATA[
-		delete from tbl_board where bno=#{bno}
+		delete from tbl_board where bno = #{ bno }
 	]]> <!-- 번호를 조건으로 레코드를 삭제한다. -->
 </delete>
-
 
 </mapper>
