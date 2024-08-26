@@ -23,12 +23,6 @@
 				<!-- form박스 만들고 submit 처리 -->
 				<form role="form" action="/board/modify" method="post">
 				
-					<!-- 추가 -->
-					<input type="hidden" name='pageNum' value='<c:out value="${ cri.pageNum }"/>'>
-					<input type="hidden" name='amount' value='<c:out value="${ cri.amount }"/>'>
-					<input type='hidden' name='type' value='<c:out value="${ cri.type }"/>'>
-                    <input type='hidden' name='keyword' value='<c:out value="${ cri.keyword }"/>'>
-				
 					<div class="form-group">
 						<label>번호</label>
 						<input class="form-control" name="bno" value='<c:out value="${ board.bno }"/>' readonly="readonly" >
@@ -49,7 +43,7 @@
 						<input class="form-control" name="writer" value='<c:out value="${ board.writer }"/>' readonly="readonly" >
 					</div> <!-- 작성자 .form-group end -->
 					
-					<div class="form-group">
+					<%-- <div class="form-group">
 						<label>등록일</label>
 						<input class="form-control" name="regdate" value='<fmt:formatDate pattern="yyyy-MM-dd" value="${ board.regdate }"/>' readonly="readonly" >
 					</div> <!-- 등록일 .form-group end -->
@@ -57,7 +51,7 @@
 					<div class="form-group">
 						<label>수정일</label>
 						<input class="form-control" name="updateDate" value='<fmt:formatDate pattern="yyyy-MM-dd" value="${ board.updateDate }"/>' readonly="readonly" >
-					</div> <!-- 등록일 .form-group end -->
+					</div> <!-- 등록일 .form-group end --> --%>
 					
 					<button type="submit" data-oper='modify' class="btn btn-primary">수정</button>
 					<button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
@@ -87,19 +81,8 @@ $(document).ready(function(){
 		if(operation === 'remove'){ /* data-oper='remove' */
 			formObj.attr("action", "/board/remove"); /* 삭제 컨트롤러를 요청 */
 		}else if(operation === 'list'){ /* data-oper='list' */
-			// move to list
-			formObj.attr("action", "/board/list").attr("method", "get");
-			var pageNumTag = $("input[name='pageNum']").clone();
-			var amountTag = $("input[name='amount']").clone(); // form 태그에서 필요한 부분만 잠시 복사(clone)해서 보관
-			var keywordTag = $("input[name='keyword']").clone();
-			var typeTag = $("input[name='type']").clone();
-			
-			
-			formObj.empty();			// form 태그 내의 모든 내용을 지운다 (empty)
-			formObj.append(pageNumTag);	// 이후에 다시 필요한 태그들만 추가해서 '/board/list'를 호출
-			formObj.append(amountTag);
-			formObj.append(keywordTag);
-			formObj.append(typeTag);
+			self.location="/board/list";
+			return;
 		}
 		formObj.submit(); /* data-oper='modify' 24행 실행 */
 	});

@@ -52,13 +52,9 @@
 					<button data-oper='list' class="btn btn-info">리스트</button>
 					<!-- onclick="location.href='/board/list'" -->
 					
-					
-					<form id='operForm' action="/board/modify" method="get">
-						<input type='hidden' id='bno' name='bno' value='<c:out value="${ board.bno }"/>'/> <!-- 수정 버튼을 클릭시 bno를 가지고 가도록 설정 -->
-						<input type='hidden' name='pageNum' value='<c:out value="${ cri.pageNum }"/>'> <!-- pageNum, amount 값을 가지고 리스트 페이지 이동 -->
-						<input type='hidden' name='amount' value='<c:out value="${ cri.amount }"/>'>
-						<input type='hidden' name='keyword' value='<c:out value="${ cri.keyword }"/>'>
-						<input type='hidden' name='type' value='<c:out value="${ cri.type }"/>'>
+					<!-- 수정 버튼을 클릭시 bno를 가지고 가도록 설정 -->
+					<form id='operForm' action="board/modify" method="get">
+						<input type='hidden' id='bno' name='bno' value='<c:out value="${ board.bno }"/>'/>
 					</form>
 				<!-- </form> --> <!-- form end -->
 			</div> <!-- .panel-body end -->

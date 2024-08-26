@@ -1,14 +1,11 @@
 package org.zerock.mapper;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
-import org.zerock.domain.Criteria;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -26,20 +23,7 @@ public class BoardMapperTests { // 테스트용 코드
 		
 		mapper.getList().forEach(board -> log.info(board));
 		
-	}
-	
-	@Test // 리스트 페이징 처리 테스트
-	public void testPaging() {
-		
-		Criteria cri = new Criteria(); // 빈객체 생성
-		// 10개씩 3페이지
-		cri.setPageNum(3);
-		cri.setAmount(10);
-		
-		List<BoardVO> list = mapper.getListWithPaging(cri);
-		
-		list.forEach(board -> log.info(board));
-	}
+	}	
 	
 	@Test // 보드 객체 삽입용 테스트
 	public void testInsert() {
@@ -100,17 +84,7 @@ public class BoardMapperTests { // 테스트용 코드
 		
 	}
 	
-	@Test // 검색 기능 테스트
-	public void testSearch() {
-		
-		Criteria cri = new Criteria(); // 빈 객체 생성
-		cri.setKeyword("새로");
-		cri.setType("TC");
-		
-		List<BoardVO> list = mapper.getListWithPaging(cri);
-		
-		list.forEach(board -> log.info(board));
-	}
+	
 	
 	
 }
