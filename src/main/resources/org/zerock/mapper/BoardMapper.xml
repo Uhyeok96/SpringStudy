@@ -13,6 +13,41 @@
 	]]> <!-- CDATA 사용 이유는 부등호인지 문자인지를 판단하지 말것 (문자처리) -->
 </select>
 
+<sql id="criteria"> <!-- sql문을 보관하고 <include>태그 id (sql id="criteria")로 호출하여 사용 (43행) -->
+	<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+		<foreach item='type' collection="typeArr">
+			<trim prefix="OR">
+				<choose>
+					<when test="type == 'T'.toString()">
+						title like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'C'.toString()">
+						content like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'W'.toString()">
+						writer like '%'||#{keyword}||'%'
+					</when>
+				</choose>
+			</trim>
+		</foreach>
+	</trim>
+</sql>
+
+<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
+	<![CDATA[
+	select bno, title, content, writer, regdate, updatedate
+	from 
+	(select /*+index_desc(tbl_board pk_board) */ rownum rn, bno, title, content, writer, regdate, updatedate from tbl_board where 
+	]]>
+	
+	<include refid="criteria"></include> <!-- 상단에 보관해놓은 sql문을 불러와 사용 <sql id="criteria"> -->
+	
+	<![CDATA[
+	rownum <= #{pageNum} * #{amount})
+	where rn > (#{pageNum} -1) * #{amount}
+	]]> <!-- pageNum와 amount를 이용하여 게시물을 1페이지당 10개씩 리스트로 출력 -->
+</select>
+
 <insert id="insert">
 	<![CDATA[
 		insert into tbl_board (bno, title, content, writer)
@@ -51,5 +86,11 @@
 		delete from tbl_board where bno = #{ bno }
 	]]> <!-- 번호를 조건으로 레코드를 삭제한다. -->
 </delete>
+
+<select id="getTotalCount" resultType="int">
+	<![CDATA[
+		select count(*) from tbl_board where bno > 0
+	]]> <!-- 게시물의 총 개수를 구한다. -->
+</select>
 
 </mapper>

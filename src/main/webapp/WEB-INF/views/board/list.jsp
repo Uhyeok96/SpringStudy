@@ -23,7 +23,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <table width="100%" class="table table-striped table-bordered table-hover" ><!-- id="dataTables-example" -->
                                 <thead>
                                     <tr>
                                         <th>번호</th>
@@ -38,7 +38,7 @@
                                 	<tr> <!-- 1행추가 -->
                                 		<td><c:out value="${ boardlist.bno }" /></td> <!-- 1열 -->
                                 		<td>
-                                			<a href='/board/get?bno=<c:out value="${ boardlist.bno }"/>'>
+                                			<a class='move' href='<c:out value="${ boardlist.bno }"/>'>
                                 				<c:out value="${ boardlist.title }" />
                                 			</a>
                                 			</td> <!-- 2열 -->
@@ -47,7 +47,62 @@
                                 		<td><fmt:formatDate pattern="yyyy-MM-dd" value="${ boardlist.updateDate }" /></td> <!-- 5열 -->
                                 	</tr>
                                 </c:forEach>
-                                </table>
+                            </table>
+                            
+                            <div class='row'>
+                            	<div class="col-lg-12">
+                            	
+                            	<form id='searchForm' action="/board/list" method='get'>
+                            		<select name='type'>
+                            			<option value=""
+                            				<c:out value="${pageMaker.cri.type == null?'selected':''}"/>>--</option>
+                            			<option value="T"
+                            				<c:out value="${pageMaker.cri.type eq 'T'?'select':''}"/>>제목</option>
+                            			<option value="C"
+                            			<c:out value="${pageMaker.cri.type eq 'C'?'select':''}"/>>내용</option>
+                            			<option value="W"
+                            			<c:out value="${pageMaker.cri.type eq 'W'?'select':''}"/>>작성자</option>
+                            			<option value="TC"
+                            			<c:out value="${pageMaker.cri.type eq 'TC'?'select':''}"/>>제목 or 내용</option>
+                            			<option value="TW"
+                            			<c:out value="${pageMaker.cri.type eq 'TW'?'select':''}"/>>제목 or 작성자</option>
+                            			<option value="TWC"
+                            			<c:out value="${pageMaker.cri.type eq 'TWC'?'select':''}"/>>제목 or 내용 or 작성자</option>
+                            		</select>
+                            		<input type='text' name='keyword' value='<c:out value="${ pageMaker.cri.keyword }"/>'/>
+                            		<input type='hidden' name='pageNum' value='<c:out value="${ pageMaker.cri.pageNum }"/>'/>
+                            		<input type='hidden' name='amount' value='<c:out value="${ pageMaker.cri.amount }"/>'/>
+                            		<button class='btn btn-default'>Search</button>
+                            	</form>
+                            	</div>
+                            </div>
+                                
+                                <div class='pull-right'> <!-- 페이지 처리 -->
+                                	<ul class="pagination">
+                                	
+                                		<c:if test="${ pageMaker.prev }">
+                                			<li class="paginate_button previous"><a href="${ pageMaker.startPage -1 }">Previous</a>
+                                			</li>
+                                		</c:if>
+                                		
+                                		<c:forEach var="num" begin="${ pageMaker.startPage }" end="${ pageMaker.endPage }">
+                                			<li class="paginate_button ${ pageMaker.cri.pageNum == num ? "active":""} ">
+                                			<a href="${ num }">${ num }</a></li>
+                                		</c:forEach>
+                                		
+                                		<c:if test="${ pageMaker.next }">
+                                			<li class="paginate_button next"><a href="${ pageMaker.endPage +1 }">Next</a></li>
+                                		</c:if>
+                                	</ul>
+                                </div>
+                            </div>
+                                
+                                <form id='actionForm' action="/board/list" method='get'>
+                                	<input type='hidden' name='pageNum' value='${ pageMaker.cri.pageNum }'>
+                                	<input type='hidden' name='amount' value='${ pageMaker.cri.amount}'>
+                                	<input type='hidden' name='type' value='<c:out value="${ pageMaker.cri.type }"/>'>
+                                	<input type='hidden' name='keyword' value='<c:out value="${ pageMaker.cri.keyword }"/>'>
+                                </form>
                                 
                                 <!-- Modal 요즘 트렌드는 alert 대신 모달!!! -->
 	                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -70,15 +125,11 @@
 	                                <!-- /.modal-dialog -->
 	                            </div>
 	                            <!-- /.modal -->
-                                
-                            </div>
-                            <!-- /.table-responsive -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-6 -->
+            </div>
             </div>
             <!-- /.row -->
             
@@ -112,6 +163,46 @@
 		
 		$("#regBtn").on("click", function(){ /* 21행의 id="regBtn" 클릭 동작(기능) */
 			self.location = "/board/register"; /* 현재문서를 /board/register로 이동 */
+		});
+		
+		var actionForm = $("#actionForm"); /* 71~74행 id='actionForm' 클릭 동작(기능)*/
+		$(".paginate_button a").on("click", function(e){
+			
+			e.preventDefault(); /* button 기본 사용을 안함. submit 안됨 */
+			
+			console.log('click'); /* 개발자 도구 콘솔에 찍힘 */
+			
+			actionForm.find("input[name='pageNum']").val($(this).attr("href")); /* form태그 내 pageNum 값은 href 속성값으로 변경 */
+			actionForm.submit(); /* 클릭시 해당하는 번호 페이지로 이동 */
+		});
+		
+		$(".move").on("click", function(e){ /* 41행 클릭 동작(기능) <a class='move' href='<c:out value="${ boardlist.bno }"/>'> */
+			e.preventDefault();
+			actionForm.append("<input type='hidden' name='bno' value='"+
+		$(this).attr("href")+"'>");
+			actionForm.attr("action","/board/get");
+			actionForm.submit();
+		});
+		
+		var searchForm = $("#searchForm");
+		
+		$("#searchForm button").on("click", function(e){
+			
+			if(!searchForm.find("option:selected").val()){
+				alert("검색종류를 선택하세요");
+				return false;
+			}
+			
+			if(!searchForm.find("input[name='keyword']").val()){
+				alert("키워드를 입력하세요");
+				return false;
+			}
+			
+			searchForm.find("input[name='pageNum']").val("1");
+			e.preventDefalut();
+			
+			searchForm.sumit();
+			
 		});
 	});
 </script>

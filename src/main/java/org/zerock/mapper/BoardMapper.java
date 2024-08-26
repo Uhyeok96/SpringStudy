@@ -4,6 +4,7 @@ import java.util.List;
 
 //import org.apache.ibatis.annotations.Select;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 public interface BoardMapper {
 	// interface로 선언하는 이유는 추상메서드와 xml을 결합하여 구현 클래스를 사용하는 마이바티스
@@ -14,6 +15,8 @@ public interface BoardMapper {
 	public List<BoardVO> getList(); // 인터페이스안에는 추상메서드임.
 	// 리턴은 List<BoardVO> 임으로 배열 안쪽에 객체가 BoardVO로 완성 됨
 	
+	// 페이징 처리 리스트 출력
+	public List<BoardVO> getListWithPaging(Criteria cri);
 	
 	// board 삽입용 코드
 	public void insert(BoardVO board);
@@ -32,4 +35,7 @@ public interface BoardMapper {
 	
 	// 게시물의 번호를 받아 객체를 삭제한다.
 	public int delete(Long bno);
+	
+	// 게시물의 전체 개수 구함
+	public int getTotalCount(Criteria cri);
 }
