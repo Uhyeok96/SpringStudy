@@ -15,3 +15,11 @@ history.replaceState({}, null, null);
 
 *** <js> form태그 버튼 기본사용 안함
 e.preventDefault(); // button 기본 사용을 안함. submit 안됨
+
+*** REST방식
+1. @Restcontroller
+2. Get(R)/Post(C)/Put(U)/Delete(D)
+3. 데이터처리 -> JSON, xml
+4. 리턴타입 + status
+5. url변경 (?, &, = 등 사용x) -> postman으로 Post방식 테스트
+6. 리턴타입 -> view 사용안함(jsp를 찾지않음)
