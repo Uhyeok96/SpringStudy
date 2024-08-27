@@ -13,96 +13,92 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 
-@RunWith(SpringJUnit4ClassRunner.class)  // 메서드별 테스트용 JUnit4
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml",
-					   "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"}) // 참고할 파일
-@Log4j2 
-@WebAppConfiguration	// 프론트영역 테스트용
+@RunWith(SpringJUnit4ClassRunner.class)
+
+// Test for Controller
+@WebAppConfiguration
+
+@ContextConfiguration({ "file:src/main/webapp/WEB-INF/spring/root-context.xml",
+		"file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
+// Java Config
+// @ContextConfiguration(classes = {
+// org.zerock.config.RootConfig.class,
+// org.zerock.config.ServletConfig.class} )
+@Log4j2
 public class BoardControllerTests {
 
-	@Setter(onMethod_ = @Autowired )
-	private WebApplicationContext ctx; // 톰켓 대타
-		
-	private MockMvc mockMvc ; // 크롬 대타
-	
-	
-	@Before //import org.junit.Before; 구동전에 선행해야되는 코드 작성
+	@Setter(onMethod_ = { @Autowired })
+	private WebApplicationContext ctx;
+
+	private MockMvc mockMvc;
+
+	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 	}
-	
-	
-	@Test // url과 결과를 처리해주는 테스트
+
+	@Test
 	public void testList() throws Exception {
-		
+
 		log.info(
-				mockMvc.perform(MockMvcRequestBuilders.get("/board/list")) 	// url을
-//				Mapped "{[/board/list],methods=[GET]}" onto public void org.zerock.controller.BoardController.list(org.springframework.ui.Model)
-				.andReturn()												// 결과를
-				.getModelAndView()											// 모델에서 뷰까지
-				.getModelMap() 												// 표형식
-				);
+				mockMvc.perform(MockMvcRequestBuilders.get("/board/list")).andReturn().getModelAndView().getModelMap());
 	}
-	
-	
+
 	@Test
 	public void testRegister() throws Exception {
-	
-		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/register")
-				.param("title","컨트롤러 테스트 제목")
-				.param("content", "컨트롤러 테스트 내용")
-				.param("writer","컨사용자"))
-				.andReturn().getModelAndView()
-				.getViewName();												// 리턴값을 받아 String처리
-		
-		log.info("결과 url : " + resultPage); //결과 url : redirect:/board/list
+
+		String resultPage = mockMvc
+				.perform(MockMvcRequestBuilders.post("/board/register")
+				.param("title", "테스트 새글 제목")
+				.param("content", "테스트 새글 내용")
+				.param("writer", "user00"))
+				.andReturn().getModelAndView().getViewName();
+
+		log.info(resultPage);
+
 	}
-	
-	
-	@Test 	// bno가 넘어가면 돌아오는 값은 객체
-	public void testGet() throws Exception { 
-									
-		log.info("결과 : " + 
-				 mockMvc.perform(MockMvcRequestBuilders.get("/board/get").param("bno", "6")) // http://localhost:80/board/get?bno=6
-						 .andReturn().getModelAndView()
-						 .getModelMap()); 		// select의 결과는 getModelMap
-		//결과 : {board=BoardVO(bno=6, title=테스트 제목, content=테스트 내용, writer=user00, regdate=Tue Aug 20 11:13:23 KST 2024, updateDate=Tue Aug 20 11:13:23 KST 2024)
-		
+
+	@Test
+	public void testGet() throws Exception {
+
+		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/get").param("bno", "2")).andReturn()
+				.getModelAndView().getModelMap());
 	}
-	
-	
+
 	@Test
 	public void testModify() throws Exception {
-	
-		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/modify")
-				.param("bno", "6")
-				.param("title","컨트롤러 수정 테스트 제목")
-				.param("content", "컨트롤러 수정 테스트 내용")
-				.param("writer","컨수정사용자"))
-				.andReturn().getModelAndView()
-				.getViewName();												// 리턴값을 받아 String처리
-		//update tbl_board set title = '컨트롤러 수정 테스트 제목', content = '컨트롤러 수정 테스트 내용', writer = '컨수정사용자', updateDate = sysdate where bno = 6 
-		log.info("결과 url : " + resultPage); //결과 url : redirect:/board/list
+
+		String resultPage = mockMvc
+				.perform(MockMvcRequestBuilders.post("/board/modify").param("bno", "1").param("title", "수정된 테스트 새글 제목")
+						.param("content", "수정된 테스트 새글 내용").param("writer", "user00"))
+				.andReturn().getModelAndView().getViewName();
+
+		log.info(resultPage);
+
 	}
-	
+
 	@Test
 	public void testRemove() throws Exception {
-		
-		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/remove")
-				.param("bno", "7"))  //delete from tbl_board where bno = 7 
-				.andReturn().getModelAndView()
-				.getViewName();												// 리턴값을 받아 String처리
-		//update tbl_board set title = '컨트롤러 수정 테스트 제목', content = '컨트롤러 수정 테스트 내용', writer = '컨수정사용자', updateDate = sysdate where bno = 6 
-		log.info("결과 url : " + resultPage); //결과 url : redirect:/board/list
+		// 삭제전 데이터베이스에 게시물 번호 확인할 것
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/remove").param("bno", "25")).andReturn()
+				.getModelAndView().getViewName();
+
+		log.info(resultPage);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Test
+	public void testListPaging() throws Exception {
+
+		log.info(mockMvc.perform(
+				MockMvcRequestBuilders.get("/board/list")
+				.param("pageNum", "2")
+				.param("amount", "50"))
+				.andReturn().getModelAndView().getModelMap());
+	}
+
 }
+
+

@@ -1,90 +1,120 @@
 package org.zerock.mapper;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 
-@RunWith(SpringJUnit4ClassRunner.class)  // 메서드별 테스트용 JUnit4
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml") // 참고할 파일
-@Log4j2 
-public class BoardMapperTests { // 테스트용 코드
-	
-	@Setter(onMethod_ = @Autowired) // 생성자 자동 주입
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+// Java Config
+// @ContextConfiguration(classes = {org.zerock.config.RootConfig.class} )
+@Log4j2
+public class BoardMapperTests {
+
+	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
-	
-	@Test // 메서드별로 테스트 JUnit
-	public void testGetList() {
-		
-		mapper.getList().forEach(board -> log.info(board));
-		
-	}	
-	
-	@Test // 보드 객체 삽입용 테스트
-	public void testInsert() {
-	
-		BoardVO boardVO = new BoardVO(); // 빈객체 생성
-		boardVO.setTitle("매퍼로만든 제목");
-		boardVO.setContent("매퍼로만든 내용");
-		boardVO.setWriter("매퍼사용자"); // 객체에 내용 삽입완료
-		
-		mapper.insert(boardVO);
-		
-		log.info("입력된 객체 : " + boardVO);
-		
-	}
-	
-	
+
 	@Test
-	public void testInsertSelectkey() {
-		
-		BoardVO boardVO = new BoardVO();
-		boardVO.setTitle("번호생성먼저 제목");
-		boardVO.setContent("번호생성먼저 내용");
-		boardVO.setWriter("번호생성나");
-		
-		mapper.insertSelectKey(boardVO); // 번호 먼저 생성후 insert
-		
-		log.info(boardVO);
+	public void testGetList() {
+
+		mapper.getList().forEach(board -> log.info(board));
+
 	}
-	
+
+	@Test
+	public void testInsert() {
+
+		BoardVO board = new BoardVO();
+		board.setTitle("새로 작성하는 글");
+		board.setContent("새로 작성하는 내용");
+		board.setWriter("newbie");
+
+		mapper.insert(board);
+
+		log.info(board);
+	}
+
+	@Test
+	public void testInsertSelectKey() {
+
+		BoardVO board = new BoardVO();
+		board.setTitle("새로 작성하는 글 select key");
+		board.setContent("새로 작성하는 내용 select key");
+		board.setWriter("newbie");
+
+		mapper.insertSelectKey(board);
+
+		log.info(board);
+	}
+
 	@Test
 	public void testRead() {
-		
-		BoardVO boardVO = mapper.read(5L);
-		
-		log.info(boardVO);
+
+		// 존재하는 게시물 번호로 테스트
+		BoardVO board = mapper.read(5L);
+
+		log.info(board);
+
 	}
-	
-	@Test
-	public void testUpdate() {
-		
-		BoardVO boardVO = new BoardVO();
-		
-		boardVO.setBno(5L); // 찾을 번호
-		boardVO.setTitle("수정한 제목");
-		boardVO.setContent("수정한 내용");
-		boardVO.setWriter("김수정");
-		
-		int count = mapper.update(boardVO);
-		log.info("수정된 개수 : " + count);
-		log.info("수정된 객체 :" + boardVO);
-	}
-	
 
 	@Test
 	public void testDelete() {
+
+		log.info("DELETE COUNT: " + mapper.delete(3L));
+	}
+
+	@Test
+	public void testUpdate() {
+
+		BoardVO board = new BoardVO();
+		// 실행전 존재하는 번호인지 확인할 것
+		board.setBno(5L);
+		board.setTitle("수정된 제목");
+		board.setContent("수정된 내용");
+		board.setWriter("user00");
+
+		int count = mapper.update(board);
+		log.info("UPDATE COUNT: " + count);
+
+	}
+
+	@Test
+	public void testPaging() {
+
+		Criteria cri = new Criteria();
 		
-		log.info("삭제한 개수 : " + mapper.delete(3L));
-		
+	    //10개씩 3페이지 
+	    cri.setPageNum(3);
+	    cri.setAmount(10);
+
+
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+
+		list.forEach(board -> log.info(board));
+
 	}
 	
-	
-	
-	
+	  @Test
+	  public void testSearch() {
+
+	    Criteria cri = new Criteria();
+	    cri.setKeyword("키워드");
+	    cri.setType("TCW");
+
+	    List<BoardVO> list = mapper.getListWithPaging(cri);
+
+	    list.forEach(board -> log.info(board));
+	  }
+
+
 }
