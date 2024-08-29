@@ -3,6 +3,7 @@ package org.zerock.service;
 import java.util.List;
 
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 
 public interface ReplyService { // 구현클래스 필수 ReplyServiceImpl.java
@@ -16,4 +17,6 @@ public interface ReplyService { // 구현클래스 필수 ReplyServiceImpl.java
 	public int remove(Long rno); // 댓글 1개 삭제 후 int로 리턴
 	
 	public List<ReplyVO> getList(Criteria cri, Long bno); // 게시글의 번호를 이용해 모든 댓글을 리스트로 출력
+	
+	public ReplyPageDTO getListPage(Criteria cri, Long bno); // 게시물의 번호에 해당하는 댓글 개수 페이지 처리
 }

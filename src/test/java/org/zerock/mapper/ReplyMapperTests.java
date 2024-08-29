@@ -99,5 +99,26 @@ public class ReplyMapperTests {
 		// INFO  org.zerock.mapper.ReplyMapperTests(lambda$094) - ReplyVO(rno=14, bno=10, reply=댓글10, replyer=kkw, replyDate=Tue Aug 27 10:52:41 KST 2024, updateDate=Tue Aug 27 10:52:41 KST 2024)
 	}
 	
+	// json을 적용한 테스트
+	@Test
+	public void testList2() {
+		
+		Criteria cri = new Criteria(2, 10); // 2페이지에 해당하는 10개의 댓글 출력
+		
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 11L); // 11번 게시물 테스트
+		
+		replies.forEach(reply -> log.info(reply));
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=40, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 12:57:22 KST 2024, updateDate=Wed Aug 28 12:57:22 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=41, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 12:57:41 KST 2024, updateDate=Wed Aug 28 12:57:41 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=42, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 13:15:06 KST 2024, updateDate=Wed Aug 28 13:15:06 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=43, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 13:15:45 KST 2024, updateDate=Wed Aug 28 13:15:45 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=45, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 13:17:54 KST 2024, updateDate=Wed Aug 28 13:17:54 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=46, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 13:20:08 KST 2024, updateDate=Wed Aug 28 13:20:08 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=47, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 14:14:23 KST 2024, updateDate=Wed Aug 28 14:14:23 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=48, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 14:15:36 KST 2024, updateDate=Wed Aug 28 14:15:36 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=49, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 14:18:13 KST 2024, updateDate=Wed Aug 28 14:18:13 KST 2024)
+//		INFO  org.zerock.mapper.ReplyMapperTests(lambda$1110) - ReplyVO(rno=50, bno=11, reply=자바스크립트 테스트, replyer=ajax, replyDate=Wed Aug 28 14:18:40 KST 2024, updateDate=Wed Aug 28 14:18:40 KST 2024)
+	}
+	
 
 }

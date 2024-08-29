@@ -22,4 +22,7 @@ public interface ReplyMapper {
 	// 댓글 리스트 : 페이징처리 + bno (pk+fk) -> 여러개의 파라미터인 경우 @Param을 사용하면 편리함
 	public List<ReplyVO> getListWithPaging(@Param("cri") Criteria cri, @Param("bno") Long bno);
 	//												페이징처리 기준점, 게시물의 번호 pk+fk
+	
+	public int getCountByBno(Long bno); // 게시물의 댓글 개수 확인
+	
 }
